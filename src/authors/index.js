@@ -22,10 +22,13 @@ router.get('/', async (req, res) => { // /authors
     // ### url = http://localhost:3001/authors?name=steve
     // ### url = http://localhost:3001/authors?age=42
     // ### url = http://localhost:3001/authors?
-    console.log(req.query.name)
-    if (req.query.name) parsedAuthors = await parsedAuthors.filter(author => author.name.toLowerCase().includes(req.query.name.toLowerCase()))
+    console.log(req.query)
+    if (req.query.name) parsedAuthors = parsedAuthors.filter(author => author.name.toLowerCase().includes(req.query.name.toLowerCase()))
     if (req.query.age) parsedAuthors = parsedAuthors.filter(author => author.age === req.query.age)
-
+    if (req.query.surname) parsedAuthors = parsedAuthors.filter(author => {
+        if (author.surname) return author.surname.toLowerCase().includes(req.query.surname.toLowerCase())
+        else { console.log('SURNAME NOT DEFINED: ', author) }
+    })
     res.send(parsedAuthors)
 })
 

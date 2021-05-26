@@ -1,8 +1,7 @@
 [
     {
-        "title": "evanalmighty",
-        "name": "steve",
-        "surname": "carell",
+        "title": "blog1",
+        "author": "steve carell",
         "email": "steve@carell.com",
         "age": "23",
         "createdAt": "2021-05-20T23:05:18.801Z",

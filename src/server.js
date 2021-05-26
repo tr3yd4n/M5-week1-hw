@@ -18,16 +18,12 @@ server.use("/authors", authorsRoutes)
 
 server.use("/blogs", blogsRoutes)
 
+//  next(err) --> ERROR HANDLERS
 server.use(notFound)
 
 server.use(forbidden)
 
 server.use(catchAllErrorHandler)
-
-// server.get("/middleware", (req, res, next) => {
-//     const { number } = req.query;
-//     res.send({ number })
-// })
 
 console.table(listEndpoints(server))
 

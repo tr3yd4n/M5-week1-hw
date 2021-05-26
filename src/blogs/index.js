@@ -4,7 +4,7 @@ import { join, dirname, parse } from "path"
 import { fileURLToPath } from "url"
 import uniqid from 'uniqid'
 import { CheckBlogPostSchema, CheckValidationResult } from './validation.js'
-import { validationResult } from "express-validator"
+
 
 //create an express function declared as a router
 const router = express.Router()
@@ -16,24 +16,19 @@ router.get('/', (req, res) => { // /blogs
 
     //1. target blogs.json grab entire list of blogs from blogs.json
     const blogs = fs.readFileSync(blogsPath)
-    // console.log(blogs.JSON)
-
     //2. convert into readable array
     const parsedblogs = JSON.parse(blogs)
-
     //3. send back to the front as response
     res.send(parsedblogs)
     console.log(parsedblogs)
 
 })
 
-router.get('/search', (req, res) => { // /search blogs by title
+router.get('/search', (req, res) => { // http://localhost:3001/blogs/search?title=blog1
 
     const { title } = req.query
     //1. target blogs.json grab entire list of blogs from blogs.json
     const blogs = fs.readFileSync(blogsPath)
-    // console.log(blogs.JSON)
-
     //2. convert into readable array
     const parsedblogs = JSON.parse(blogs)
     const filteredBlogs = parsedblogs.filter(blog => blog.title.toLowerCase().includes(title.toLowerCase()))
@@ -43,32 +38,31 @@ router.get('/search', (req, res) => { // /search blogs by title
 
 })
 
-// // Question 3 - DONE 
-router.post('/', CheckBlogPostSchema, CheckValidationResult, async (req, res, next) => {
+// // Question 3 - DONE  
+router.post('/', CheckBlogPostSchema, CheckValidationResult, async (req, res) => {
     try {
-
         //1. read the body of the request
-        const newblog = { id: uniqid(), ...req.body, createdAt: new Date(), updatedAt: new Date() }
-        console.log(newblog)
+        const newBlog = { ...req.body, createdAt: new Date(), id: uniqid() }
+        console.log(newBlog)
 
-        //2. read content of chosen json file (blogs.json)
-        const blogsJSON = fs.readFileSync(blogsPath)
-        const blogsList = JSON.parse(blogsJSON)
+        //2. read content of chosen json file (Blogs.json)
+        const BlogsJSON = fs.readFileSync(blogsPath)
+        const BlogsList = JSON.parse(BlogsJSON)
 
-        //3. push the new blog into the blogs.json array
-        blogsList.push(newblog)
+        //3. push the new Blog into the Blogs.json array
+        BlogsList.push(newBlog)
 
         //4. write the array back into the JSON file as a string
-        fs.writeFileSync(blogsPath, JSON.stringify(blogsList))
-    }
+        fs.writeFileSync(blogsPath, JSON.stringify(BlogsList))
 
-    catch {
-        res.send(error)
+        //5. provide a response 201 = created
+        console.log(BlogsList)
+        res.status(201).send(newBlog.id)
     }
-    //5. provide a response 201 = created
-    res.status(201).send(newblog.id)
-    console.log(blogsList)
-
+    catch (err) {
+        console.log(err)
+        res.send(err)
+    }
 })
 
 // Question 2
